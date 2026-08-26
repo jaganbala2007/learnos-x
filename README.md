@@ -2,6 +2,7 @@
 
 <div align="center">
 
+[![Live Demo](https://img.shields.io/badge/Vercel-Live_Demo-000000?style=for-the-badge&logo=vercel)](https://learnos-x.vercel.app/)
 [![Next.js 14](https://img.shields.io/badge/Next.js-14.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python)](https://python.org)
@@ -11,7 +12,9 @@
 
 **"Existing platforms recommend what to learn. LEARNOS X engineers the optimal journey from who the learner is today to who they want to become."**
 
-[Live Web App](http://localhost:3000) • [API Swagger Docs](http://127.0.0.1:8000/docs) • [Architecture Docs](docs/02-architecture.md)
+### 🌐 Live Production Application: [https://learnos-x.vercel.app](https://learnos-x.vercel.app)
+
+[Live Web App](https://learnos-x.vercel.app) • [API Swagger Docs](http://127.0.0.1:8000/docs) • [Architecture Docs](docs/02-architecture.md)
 
 </div>
 
@@ -90,28 +93,15 @@ Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 ```bash
 docker-compose up --build
 ```
-- **Frontend App**: `http://localhost:3000`
+- **Live Web App**: `https://learnos-x.vercel.app`
 - **Backend Swagger API**: `http://localhost:8000/docs`
 
 ---
 
-## ☁️ 24/7 Always-Online Cloud Deployment Guide
+## ☁️ 24/7 Always-Online Cloud Deployment Status
 
-To keep **LEARNOS X** running online 24/7 for free or at minimal cost:
-
-### Option A: Vercel (Frontend) + Render (Backend)
-1. **Frontend (Vercel)**:
-   - Import your GitHub repo `jaganbala2007/learnos-x` on [Vercel](https://vercel.com).
-   - Set **Root Directory** to `frontend`.
-   - Set Environment Variable: `NEXT_PUBLIC_API_URL=https://your-backend.onrender.com`.
-2. **Backend (Render / Railway)**:
-   - Create a Web Service on [Render.com](https://render.com) or [Railway.app](https://railway.app).
-   - Root directory: `backend`.
-   - Build command: `pip install -r requirements.txt`.
-   - Start command: `uvicorn app.main:app --host 0.0.0.0 --port 8000`.
-
-### Option B: Docker on AWS EC2 / DigitalOcean Droplet
-Run `docker-compose up -d` on any $5/month cloud VPS for 24/7 background uptime.
+- 🌐 **Frontend App (Vercel)**: **[https://learnos-x.vercel.app](https://learnos-x.vercel.app)**
+- ⚙️ **Backend Service (Render / Railway)**: Deployable via `/backend` Dockerfile or Python standard runner.
 
 ---
 
