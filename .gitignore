@@ -1,0 +1,25 @@
+# Node.js
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.sqlite3
+*.db
+
+# Environment & IDE
+.env
+.env.local
+.vscode/
+.idea/
+*.swp
+*.log
+DS_Store
