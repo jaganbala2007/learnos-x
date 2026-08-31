@@ -57,8 +57,8 @@ export default function InterviewPage() {
   };
 
   const submitAnswer = async (customText?: string) => {
-    const ans = customText || input;
-    if (!ans.trim()) return;
+    const ans = (customText !== undefined ? customText : input).trim();
+    if (!ans) return;
     setInput("");
     setMessages((prev) => [...prev, { role: "candidate", content: ans }]);
     setLoading(true);
@@ -125,6 +125,7 @@ export default function InterviewPage() {
           {(["English Fluency Practice", "Domain Deep Dive", "Technical Screening", "Coding", "Behavioral"] as const).map((m) => (
             <button
               key={m}
+              type="button"
               onClick={() => handleModeChange(m)}
               className={`px-3 py-1.5 rounded transition-all cursor-pointer ${
                 interviewMode === m
@@ -141,7 +142,7 @@ export default function InterviewPage() {
       {/* Main Workspace Grid (65% Left / 35% Right Proportions) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Chat Window (8 cols / ~66%) */}
-        <div className="lg:col-span-8 editorial-block flex flex-col h-[560px]">
+        <div className="lg:col-span-8 editorial-block flex flex-col min-h-[540px]">
           <div className="flex items-center justify-between pb-3 border-b border-brand-border text-xs font-mono">
             <div className="flex items-center space-x-2 text-amber-800 dark:text-amber-400 font-bold">
               <Terminal className="h-4 w-4" />
@@ -153,12 +154,12 @@ export default function InterviewPage() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto my-4 space-y-4 pr-2 text-xs">
+          <div className="flex-1 overflow-y-auto my-4 space-y-4 pr-2 text-xs min-h-[260px] max-h-[420px]">
             {messages.map((m, idx) => (
               <div key={idx} className={`flex ${m.role === "candidate" ? "justify-end" : "justify-start"}`}>
                 <div className={`max-w-[88%] rounded-xl p-4 leading-relaxed ${
                   m.role === "candidate" 
-                    ? "bg-[#D99A2B]/15 border border-[#D99A2B]/40 text-brand-textMain" 
+                    ? "bg-[#D99A2B]/20 border border-[#D99A2B]/50 text-brand-textMain font-medium shadow-xs" 
                     : "bg-brand-surface border border-brand-border text-brand-textMain"
                 }`}>
                   <span className="font-mono text-[9px] font-bold text-amber-800 dark:text-amber-400 block mb-1 uppercase">
@@ -177,40 +178,51 @@ export default function InterviewPage() {
             )}
           </div>
 
-          {/* Quick Speech Suggestions */}
-          <div className="flex items-center space-x-2 mb-3 overflow-x-auto pb-1">
-            {[
-              "Virtual interfaces provide a dynamic handle to static physical interface signals.",
-              "They enable OOP class objects to drive DUT ports without static compilation errors.",
-              "Clocking blocks sample signals in the preponed region to prevent race conditions."
-            ].map((sug, i) => (
-              <button
-                key={i}
-                onClick={() => submitAnswer(sug)}
-                className="px-3 py-1.5 rounded bg-brand-elevated hover:bg-brand-surface border border-brand-border text-[11px] font-mono text-brand-textMain cursor-pointer whitespace-nowrap transition-all hover:border-[#D99A2B]/50"
-              >
-                {sug}
-              </button>
-            ))}
+          {/* Recommended Speech Responses Grid */}
+          <div className="space-y-1 mb-3">
+            <span className="text-[10px] font-mono text-brand-textDim uppercase font-bold block">
+              RECOMMENDED TECHNICAL RESPONSES
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              {[
+                "Virtual interfaces provide a dynamic handle to static physical interface signals.",
+                "They enable OOP class objects to drive DUT ports without static compilation errors.",
+                "Clocking blocks sample signals in the preponed region to prevent race conditions."
+              ].map((sug, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => submitAnswer(sug)}
+                  className="p-2.5 rounded bg-brand-elevated hover:bg-brand-surface border border-brand-border text-[11px] font-mono text-brand-textMain text-left leading-tight cursor-pointer transition-all hover:border-[#D99A2B]/60 shadow-xs"
+                >
+                  {sug}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="flex items-center space-x-2 pt-3 border-t border-brand-border">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              submitAnswer();
+            }}
+            className="flex items-center space-x-2 pt-3 border-t border-brand-border"
+          >
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && submitAnswer()}
               placeholder="Type your interview response in English..."
-              className="flex-1 bg-brand-surface border border-brand-border rounded-lg px-4 py-2.5 text-xs text-brand-textMain placeholder:text-brand-textDim outline-none focus:border-[#D99A2B]"
+              className="flex-1 w-full min-w-0 bg-brand-surface border border-brand-border rounded-lg px-4 py-2.5 text-xs text-brand-textMain placeholder:text-brand-textDim outline-none focus:border-[#D99A2B]"
             />
             <button
-              onClick={() => submitAnswer()}
-              className="btn-primary text-xs flex items-center space-x-1.5 cursor-pointer"
+              type="submit"
+              className="btn-primary text-xs flex items-center space-x-1.5 cursor-pointer shrink-0 px-4 py-2.5"
             >
               <span>Submit Response</span>
               <Send className="h-3.5 w-3.5" />
             </button>
-          </div>
+          </form>
         </div>
 
         {/* Right English Fluency Scorecard Panel (4 cols / ~33%) */}
