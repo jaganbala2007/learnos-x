@@ -1,37 +1,42 @@
 "use client";
 
-import PathComparator from "../../components/PathComparator";
-import JobDescriptionMapper from "../../components/ui/JobDescriptionMapper";
 import WhatIfSimulatorCard from "../../components/ui/WhatIfSimulatorCard";
-import TrajectoryChart from "../../components/ui/TrajectoryChart";
-import { Compass, Sparkles } from "lucide-react";
+import { TrendingUp, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { useDomain } from "../../lib/DomainContext";
 
 export default function SimulatorPage() {
   const { activeDomain } = useDomain();
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-brand-surface via-brand-surface to-cyan-950/30 border border-brand-border">
-        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase tracking-wider">
-          Counterfactual Intelligence
-        </span>
-        <h1 className="text-2xl font-extrabold text-slate-100 mt-1">
-          Trajectory & What-If Career Simulator
-        </h1>
-        <p className="text-xs text-brand-textMuted mt-1 max-w-xl">
-          Model time budgets, skip non-critical prerequisites, compare pathing strategies, and simulate career readiness curves for {activeDomain.name}.
-        </p>
+    <div className="space-y-6 animate-in fade-in duration-300 telemetry-grid">
+      {/* Editorial Header */}
+      <div className="editorial-block border-l-4 border-l-[#D99A2B] flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-400 tracking-wider uppercase">
+            PREDICTIVE CAREER TRAJECTORY SIMULATOR
+          </span>
+          <h1 className="font-serif-title text-2xl md:text-3xl font-bold text-brand-textMain mt-0.5">
+            What-If Career Trajectory Engine
+          </h1>
+          <p className="text-xs text-brand-textMuted mt-1 max-w-xl leading-relaxed">
+            Simulate how daily study commitment, skill acquisition speed, and project proof impact your career readiness index for **{activeDomain.name}**.
+          </p>
+        </div>
+
+        <div className="flex items-center space-x-3">
+          <Link
+            href="/"
+            className="btn-secondary text-xs flex items-center space-x-1.5"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Return to Dashboard</span>
+          </Link>
+        </div>
       </div>
 
+      {/* Trajectory Simulator Component */}
       <WhatIfSimulatorCard />
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <TrajectoryChart />
-        <PathComparator />
-      </div>
-
-      <JobDescriptionMapper />
     </div>
   );
 }

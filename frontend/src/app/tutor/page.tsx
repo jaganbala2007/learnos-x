@@ -1,130 +1,110 @@
 "use client";
 
+import { useState } from "react";
 import SocraticTutorChat from "../../components/SocraticTutorChat";
-import { Bot, BookOpen, Code, CheckCircle2, AlertCircle, Sparkles, Terminal, FileText } from "lucide-react";
+import { BookOpen, Sparkles, CheckCircle2, Award, Terminal } from "lucide-react";
 import { useDomain } from "../../lib/DomainContext";
 
 export default function TutorPage() {
   const { activeDomain } = useDomain();
 
-  const codeSnippet = `interface bus_if (input logic clk, reset_n);
-  logic [31:0] addr;
-  logic [31:0] data;
-  logic        valid;
-  logic        ready;
-
-  clocking cb @(posedge clk);
-    default input #1step output #2ns;
-    output addr, data, valid;
-    input  ready;
-  endclocking
-
-  modport master (clocking cb, input reset_n);
-endinterface`;
-
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Header */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-brand-surface via-brand-surface to-emerald-950/30 border border-brand-border flex items-center justify-between">
+    <div className="space-y-6 animate-in fade-in duration-300 telemetry-grid">
+      {/* Editorial Header */}
+      <div className="editorial-block border-l-4 border-l-[#3F7C78] flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider">
-            RAG Learning Workspace
+          <span className="text-[10px] font-mono font-bold text-teal-800 dark:text-teal-400 tracking-wider uppercase">
+            3-COLUMN SOCRATIC AI LEARNING WORKSPACE
           </span>
-          <h1 className="text-2xl font-extrabold text-slate-100 mt-1">Socratic AI Tutor & Diagnostic Lab</h1>
-          <p className="text-xs text-brand-textMuted mt-1 max-w-xl">
-            Interactive AI study partner for {activeDomain.name} providing targeted Socratic questions, code explanations, and diagnostic misconception analysis.
+          <h1 className="font-serif-title text-2xl md:text-3xl font-bold text-brand-textMain mt-0.5">
+            Autonomous Socratic Tutor & Diagnostic Lab
+          </h1>
+          <p className="text-xs text-brand-textMuted mt-1 max-w-xl leading-relaxed">
+            Master engineering concepts through guided questioning, instant diagnostic checks, and contextual documentation for **{activeDomain.name}**.
           </p>
         </div>
 
-        <div className="hidden lg:flex items-center space-x-2 text-xs font-mono">
-          <span className="text-brand-textDim">Active Skill:</span>
-          <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-semibold">
-            {activeDomain.keySkills[3]?.name || "SystemVerilog Interfaces"}
-          </span>
+        <div className="flex items-center space-x-2 text-xs font-mono text-emerald-800 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20">
+          <CheckCircle2 className="h-4 w-4" />
+          <span>Active Learning Session</span>
         </div>
       </div>
 
-      {/* 3-COLUMN WORKSPACE GRID */}
+      {/* 3-Column AI Learning Workspace Container */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* LEFT COLUMN: LEARNING CONTEXT & MISCONCEPTIONS (3 cols) */}
+        {/* Left Column: Learning Context & Prerequisite Tree (3 cols) */}
         <div className="lg:col-span-3 space-y-4">
-          <div className="glass-panel p-4 space-y-3">
-            <h4 className="text-xs font-mono font-bold text-slate-200 uppercase flex items-center space-x-1.5">
-              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-              <span>Active Context</span>
-            </h4>
+          <div className="editorial-block space-y-3">
+            <span className="text-[10px] font-mono font-bold text-brand-textDim uppercase block border-b border-brand-border pb-2">
+              LEARNING MODULE CONTEXT
+            </span>
 
-            <div className="space-y-2 text-xs">
-              <div className="bg-brand-elevated/70 p-2.5 rounded-xl border border-brand-border">
-                <span className="text-[10px] text-brand-textDim block font-mono">CURRENT TOPIC</span>
-                <span className="font-bold text-slate-100">{activeDomain.keySkills[3]?.name}</span>
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono text-amber-800 dark:text-amber-400 font-bold block uppercase">
+                TARGET TOPIC
+              </span>
+              <h4 className="font-serif-title font-bold text-base text-brand-textMain">
+                SystemVerilog Interface & Clocking Blocks
+              </h4>
+            </div>
+
+            <div className="pt-2 space-y-2 text-xs font-mono">
+              <div className="flex items-center justify-between">
+                <span className="text-brand-textDim">Estimated Mastery</span>
+                <span className="font-bold text-amber-800 dark:text-amber-400">+14% Index</span>
               </div>
-
-              <div className="bg-brand-elevated/70 p-2.5 rounded-xl border border-brand-border">
-                <span className="text-[10px] text-brand-textDim block font-mono">TARGET MASTERY</span>
-                <span className="font-bold text-cyan-300">85% (Current: {activeDomain.keySkills[3]?.mastery}%)</span>
-              </div>
-
-              <div className="bg-brand-elevated/70 p-2.5 rounded-xl border border-brand-border">
-                <span className="text-[10px] text-brand-textDim block font-mono">RETENTION INDEX</span>
-                <span className="font-bold text-emerald-400">74% (Optimal)</span>
+              <div className="flex items-center justify-between">
+                <span className="text-brand-textDim">Target Roles</span>
+                <span className="font-bold text-teal-800 dark:text-teal-400">37 Postings</span>
               </div>
             </div>
-          </div>
 
-          <div className="glass-panel p-4 space-y-3">
-            <h4 className="text-xs font-mono font-bold text-amber-300 uppercase flex items-center space-x-1.5">
-              <AlertCircle className="h-4 w-4 text-amber-400" />
-              <span>Diagnosed Misconceptions</span>
-            </h4>
-
-            <div className="space-y-2 text-xs">
-              <div className="bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-xl text-amber-200">
-                <span className="font-bold block mb-0.5">Nonblocking Update Timing</span>
-                <p className="text-[11px] text-amber-300/80 leading-tight">
-                  Confused NBA region execution timing with Immediate Active region updates.
-                </p>
+            <div className="pt-3 border-t border-brand-border space-y-2">
+              <span className="text-[10px] font-mono font-bold text-brand-textDim uppercase block">
+                PREREQUISITES SATISFIED
+              </span>
+              <div className="space-y-1 text-xs">
+                {["Digital Logic Fundamentals", "Verilog Syntax & Registers", "Clocked Sequential Logic"].map((pre, i) => (
+                  <div key={i} className="flex items-center space-x-2 text-emerald-800 dark:text-emerald-400 font-mono text-[11px]">
+                    <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" />
+                    <span className="truncate">{pre}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
 
-        {/* CENTER COLUMN: SOCRATIC CHAT WORKSPACE (6 cols) */}
-        <div className="lg:col-span-6">
+        {/* Center Column: Socratic AI Chat Workspace (6 cols) */}
+        <div className="lg:col-span-6 editorial-block h-[600px] flex flex-col p-4">
           <SocraticTutorChat />
         </div>
 
-        {/* RIGHT COLUMN: KNOWLEDGE PANEL & CODE SNIPPETS (3 cols) */}
+        {/* Right Column: Knowledge Panel & Reference Docs (3 cols) */}
         <div className="lg:col-span-3 space-y-4">
-          <div className="glass-panel p-4 space-y-3">
-            <h4 className="text-xs font-mono font-bold text-cyan-300 uppercase flex items-center space-x-1.5">
-              <Code className="h-4 w-4 text-cyan-400" />
-              <span>Reference Architecture</span>
-            </h4>
+          <div className="editorial-block space-y-3">
+            <span className="text-[10px] font-mono font-bold text-brand-textDim uppercase block border-b border-brand-border pb-2">
+              ENGINEERING TELEMETRY & REFERENCE
+            </span>
 
-            <div className="bg-slate-950 p-3 rounded-xl border border-brand-border overflow-x-auto">
-              <pre className="font-mono text-[10px] text-cyan-300 leading-tight">
-                <code>{codeSnippet}</code>
-              </pre>
+            <div className="p-3 rounded-lg bg-brand-surface border border-brand-border space-y-1.5">
+              <span className="font-bold text-xs text-brand-textMain flex items-center space-x-1.5">
+                <Terminal className="h-3.5 w-3.5 text-amber-800 dark:text-amber-400" />
+                <span>SystemVerilog Interface</span>
+              </span>
+              <p className="text-[11px] text-brand-textMuted leading-relaxed">
+                Interfaces bundle directional signals and clocking blocks into reusable verification ports, eliminating netlist wiring errors.
+              </p>
             </div>
-          </div>
 
-          <div className="glass-panel p-4 space-y-3">
-            <h4 className="text-xs font-mono font-bold text-slate-200 uppercase flex items-center space-x-1.5">
-              <Terminal className="h-4 w-4 text-purple-400" />
-              <span>Interview Practice Questions</span>
-            </h4>
-
-            <div className="space-y-2 text-xs text-brand-textMuted">
-              <div className="bg-brand-elevated/70 p-2.5 rounded-xl border border-brand-border hover:border-cyan-500/30 transition-all cursor-pointer">
-                <span className="font-bold text-slate-200 block mb-1">Q: What is the purpose of modports in SV interfaces?</span>
-                <span className="text-[10px] font-mono text-cyan-400">Click to practice with AI</span>
-              </div>
-
-              <div className="bg-brand-elevated/70 p-2.5 rounded-xl border border-brand-border hover:border-cyan-500/30 transition-all cursor-pointer">
-                <span className="font-bold text-slate-200 block mb-1">Q: How do clocking blocks eliminate race conditions?</span>
-                <span className="text-[10px] font-mono text-cyan-400">Click to practice with AI</span>
-              </div>
+            <div className="p-3 rounded-lg bg-brand-surface border border-brand-border space-y-1.5">
+              <span className="font-bold text-xs text-brand-textMain flex items-center space-x-1.5">
+                <Sparkles className="h-3.5 w-3.5 text-teal-800 dark:text-teal-400" />
+                <span>Socratic Prompt Tip</span>
+              </span>
+              <p className="text-[11px] text-brand-textMuted leading-relaxed">
+                Ask the AI Tutor to construct a minimal SystemVerilog clocking block code sample to observe signal sampling in the preponed region.
+              </p>
             </div>
           </div>
         </div>

@@ -10,7 +10,7 @@ import MisconceptionModal from "../components/MisconceptionModal";
 import JobDescriptionMapper from "../components/ui/JobDescriptionMapper";
 import DigitalTwinCard from "../components/DigitalTwinCard";
 import { fetchApi } from "../lib/api";
-import { Sparkles, ArrowRight, Target, CheckCircle2, AlertCircle, Play, Cpu, Zap, Activity, Volume2 } from "lucide-react";
+import { Sparkles, ArrowRight, Target, CheckCircle2, AlertCircle, Cpu, Volume2 } from "lucide-react";
 import { useDomain } from "../lib/DomainContext";
 
 export default function DashboardPage() {
@@ -56,89 +56,85 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300 telemetry-grid">
-      {/* HERO COMMAND CENTER HEADER */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 p-6 rounded-2xl bg-gradient-to-r from-brand-surface via-brand-surface to-indigo-950/40 border border-brand-border shadow-panel relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div className="space-y-1.5 z-10">
-          <div className="flex items-center space-x-2">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase tracking-wider flex items-center space-x-1">
-              <Activity className="h-3 w-3 text-cyan-400 animate-pulse" />
-              <span>LEARNOS X Autonomous Career OS</span>
+      {/* EDITORIAL HERO INTRODUCTION REPORT HEADER */}
+      <div className="editorial-block border-l-4 border-l-[#D99A2B] space-y-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-brand-border pb-4">
+          <div className="space-y-1">
+            <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-400 tracking-wider uppercase">
+              AUTONOMOUS CAREER INTELLIGENCE REPORT
             </span>
-            <span className="text-xs font-mono text-brand-textDim">| {activeDomain.name}</span>
+            <h1 className="font-serif-title text-2xl md:text-3xl font-bold text-brand-textMain">
+              Career Dashboard Briefing
+            </h1>
+            <p className="text-xs font-mono text-brand-textMuted">
+              {selectedRole} · <span className="text-amber-700 dark:text-amber-400 font-bold">{activeDomain.readinessScore}% Job Ready</span>
+            </p>
           </div>
 
-          <h1 className="text-2xl md:text-3xl font-extrabold text-slate-100 tracking-tight font-display">
-            Good evening, Alex
-          </h1>
-          <p className="text-xs text-brand-textMuted max-w-xl">
-            Targeting <strong className="text-cyan-300 font-semibold">{selectedRole}</strong>. You are 3 topological skill modules away from full job readiness.
-          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href="/interview"
+              className="btn-secondary text-xs flex items-center space-x-1.5"
+            >
+              <Volume2 className="h-4 w-4 text-amber-700 dark:text-amber-400" />
+              <span>English Fluency Practice Mode</span>
+            </a>
+
+            <button
+              onClick={triggerDiagnosticFailure}
+              className="btn-secondary text-xs flex items-center space-x-1.5"
+            >
+              <AlertCircle className="h-4 w-4 text-rose-700 dark:text-rose-400" />
+              <span>Diagnostic Test</span>
+            </button>
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 z-10">
-          <a
-            href="/interview"
-            className="px-3.5 py-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 hover:bg-rose-500/20 font-mono font-semibold text-xs flex items-center space-x-1.5 transition-all shadow-sm"
-          >
-            <Volume2 className="h-4 w-4 text-rose-400" />
-            <span>English Fluency Lab</span>
-          </a>
-
-          <button
-            onClick={triggerDiagnosticFailure}
-            className="px-3.5 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 font-mono font-semibold text-xs flex items-center space-x-1.5 transition-all shadow-sm"
-          >
-            <AlertCircle className="h-4 w-4" />
-            <span>Diagnostic Misconception Test</span>
-          </button>
-
-          <a
-            href="/tutor"
-            className="btn-primary text-xs flex items-center space-x-2 bg-gradient-to-r from-indigo-500 via-indigo-600 to-cyan-500 hover:brightness-110 shadow-glow-cyan"
-          >
-            <span>Launch Mission</span>
-            <ArrowRight className="h-4 w-4" />
-          </a>
+        {/* Editorial Career Insight Summary Statement */}
+        <div className="space-y-2 pt-1">
+          <p className="font-serif-title italic text-base md:text-lg text-brand-textMain leading-relaxed">
+            "You have a strong digital-logic foundation. Your highest-impact career unlock is advanced SystemVerilog verification and UVM testbench architecture."
+          </p>
+          <p className="text-xs text-brand-textMuted">
+            Closing 3 remaining prerequisite skill modules will increase your verified job readiness index from 72% to 86%.
+          </p>
         </div>
       </div>
 
-      {/* LAYERED 3-RING READINESS GAUGE */}
+      {/* CAREER READINESS RING VISUALIZATION */}
       <CareerReadinessRing />
 
-      {/* SPATIAL CAREER CONSTELLATION PIPELINE */}
+      {/* CAREER PIPELINE TRAJECTORY */}
       <CareerConstellation />
 
-      {/* HIGHEST-IMPACT ACTION RECOMMENDATION */}
+      {/* TODAY'S HIGHEST-IMPACT ACTION */}
       <NextBestActionCard />
 
       {/* ADAPTIVE ROADMAP TIMELINE */}
       <AdaptiveRoadmapTimeline />
 
-      {/* DIGITAL TWIN & JD MAPPER GRID */}
+      {/* DIGITAL TWIN & JD MAPPER */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <DigitalTwinCard />
         <JobDescriptionMapper />
       </div>
 
       {/* SKILL GRAPH CANVAS */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
+      <div className="editorial-block space-y-4">
+        <div className="flex items-center justify-between border-b border-brand-border pb-3">
           <div>
-            <h3 className="text-lg font-bold text-slate-100 flex items-center space-x-2">
-              <Cpu className="h-5 w-5 text-cyan-400" />
-              <span>Universal Topological Skill Graph</span>
+            <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-400 tracking-wider uppercase">
+              TOPOLOGICAL SKILL DAG GRAPH
+            </span>
+            <h3 className="font-serif-title font-bold text-lg text-brand-textMain mt-0.5">
+              Interactive Skill Dependency Canvas
             </h3>
-            <p className="text-xs text-brand-textDim">
-              Real-time Directed Acyclic Graph (DAG) visualizing dependencies, verified status, and prerequisite chains.
-            </p>
           </div>
           <a
             href="/skill-graph"
-            className="text-xs font-mono font-semibold text-cyan-400 hover:text-cyan-300 flex items-center space-x-1"
+            className="text-xs font-mono font-bold text-amber-800 dark:text-amber-400 hover:underline flex items-center space-x-1"
           >
-            <span>Full Canvas Mode</span>
+            <span>Full Screen Canvas</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </a>
         </div>
