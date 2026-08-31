@@ -1,33 +1,60 @@
 "use client";
 
 import { useState } from "react";
-import { Bot, Send, Award, CheckCircle2, Clock, Terminal, AlertCircle, Volume2, Mic, Sparkles, MessageSquare } from "lucide-react";
+import { Send, Terminal, Volume2, Mic, Sparkles } from "lucide-react";
 import { fetchApi } from "../../lib/api";
 import { useDomain } from "../../lib/DomainContext";
+
+const MODE_QUESTIONS: Record<string, string> = {
+  "English Fluency Practice":
+    "Welcome Alex! I am your AI Technical Interviewer & Communication Coach.\n\nLet's begin your **English Fluency Practice**: Please explain in clear professional English why SystemVerilog interfaces are used over traditional wire/reg bundles in modern verification testbenches.",
+  "Domain Deep Dive":
+    "Domain Deep Dive Mode (RTL Verification):\n\nCan you explain the exact mechanism of how SystemVerilog clocking blocks sample signals in the preponed region to eliminate simulation race conditions?",
+  "Technical Screening":
+    "Technical Screening Question:\n\nWhat is the precise difference between non-blocking (`<=`) and blocking (`=`) assignments in Verilog, and which IEEE 1800 scheduler region processes non-blocking updates?",
+  "Coding":
+    "Coding & Logic Challenge:\n\nWrite a SystemVerilog constrained-random class definition for an Ethernet packet where `payload.size()` is constrained between 64 and 1500 bytes.",
+  "Behavioral":
+    "Behavioral Engineering Question:\n\nDescribe a complex technical bug you encountered during RTL simulation or STA timing closure, how you isolated the root cause, and how you communicated the fix to your team."
+};
 
 export default function InterviewPage() {
   const { activeDomain } = useDomain();
 
-  const [interviewMode, setInterviewMode] = useState<"English Fluency Practice" | "Domain Deep Dive" | "Technical Screening" | "Coding" | "Behavioral">("English Fluency Practice");
+  const [interviewMode, setInterviewMode] = useState<
+    "English Fluency Practice" | "Domain Deep Dive" | "Technical Screening" | "Coding" | "Behavioral"
+  >("English Fluency Practice");
+
   const [messages, setMessages] = useState([
     {
       role: "interviewer",
-      content: `Welcome Alex! I am your AI Technical Interviewer and English Communication Coach.\n\nLet's begin your **English Fluency Practice**: Please explain in clear professional English why SystemVerilog interfaces are used over traditional wire/reg bundles in modern verification testbenches.`
+      content: MODE_QUESTIONS["English Fluency Practice"]
     }
   ]);
+
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
   // English Fluency Real-Time Telemetry
   const [fluencyScorecard, setFluencyScorecard] = useState<any>({
-    pronunciation_clarity: 92,
+    pronunciation_clarity: 95,
     grammar_precision: 88,
     technical_vocab_density: 84,
     speaking_pace_wpm: 138,
-    filler_words_count: 2,
-    filler_word_examples: ["um", "you know"],
-    feedback_notes: "Excellent technical vocabulary and speech rhythm. Filler word frequency reduced by 40%."
+    filler_words_count: 0,
+    filler_word_examples: [],
+    feedback_notes: "Outstanding technical vocabulary and rhythm. Zero filler words detected in current response."
   });
+
+  const handleModeChange = (mode: typeof interviewMode) => {
+    setInterviewMode(mode);
+    setMessages([
+      {
+        role: "interviewer",
+        content: MODE_QUESTIONS[mode] || MODE_QUESTIONS["English Fluency Practice"]
+      }
+    ]);
+  };
 
   const submitAnswer = async (customText?: string) => {
     const ans = customText || input;
@@ -46,12 +73,12 @@ export default function InterviewPage() {
       const fillers = (ans.match(/\b(um|uh|like|you know|basically|actually)\b/gi) || []).length;
 
       setFluencyScorecard({
-        pronunciation_clarity: Math.min(98, 88 + Math.floor(Math.random() * 8)),
-        grammar_precision: Math.min(95, 85 + Math.floor(Math.random() * 8)),
-        technical_vocab_density: Math.min(96, 80 + Math.floor(Math.random() * 12)),
-        speaking_pace_wpm: Math.round(wordCount > 15 ? 135 : 120 + wordCount * 2),
+        pronunciation_clarity: Math.min(98, 90 + Math.floor(Math.random() * 8)),
+        grammar_precision: Math.min(96, 86 + Math.floor(Math.random() * 8)),
+        technical_vocab_density: Math.min(96, 82 + Math.floor(Math.random() * 12)),
+        speaking_pace_wpm: Math.round(wordCount > 15 ? 138 : 124 + wordCount * 2),
         filler_words_count: fillers,
-        filler_word_examples: fillers > 0 ? ["um", "basically"] : ["None detected!"],
+        filler_word_examples: fillers > 0 ? ["um", "basically"] : [],
         feedback_notes: fillers === 0 
           ? "Outstanding clarity! Zero filler words detected. Technical terms delivered with precision."
           : `Good response! Detected ${fillers} filler word(s). Try replacing pauses with silent breaths.`
@@ -61,7 +88,7 @@ export default function InterviewPage() {
         ...prev,
         {
           role: "interviewer",
-          content: res.next_question || "Strong technical and verbal execution! Next question: Can you describe a challenging bug you debugged in your HDL code and how you resolved it?"
+          content: res.next_question || "Excellent response! Next question: Can you describe how UVM virtual sequencers coordinate multiple interface agents?"
         }
       ]);
     } catch (e) {
@@ -69,7 +96,7 @@ export default function InterviewPage() {
         ...prev,
         {
           role: "interviewer",
-          content: "Great verbal delivery! Next question: Can you describe a challenging technical bug you debugged and how you resolved it?"
+          content: "Great verbal delivery! Next question: How do UVM virtual sequencers coordinate transactions across multiple independent interface agents?"
         }
       ]);
     } finally {
@@ -81,28 +108,28 @@ export default function InterviewPage() {
     <div className="space-y-6 animate-in fade-in duration-300 telemetry-grid">
       {/* Editorial Header */}
       <div className="editorial-block border-l-4 border-l-[#C86B4A] flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <span className="text-[10px] font-mono font-bold text-terracotta text-amber-800 dark:text-amber-400 tracking-wider uppercase">
+        <div className="space-y-1">
+          <span className="text-[10px] font-mono font-bold text-amber-800 dark:text-amber-400 tracking-wider uppercase">
             TECHNICAL & VERBAL COMMUNICATION LAB
           </span>
-          <h1 className="font-serif-title text-2xl md:text-3xl font-bold text-brand-textMain mt-0.5">
+          <h1 className="font-serif-title text-2xl md:text-3xl font-bold text-brand-textMain">
             English Fluency & AI Technical Interview
           </h1>
-          <p className="text-xs text-brand-textMuted mt-1 max-w-xl leading-relaxed">
-            Practice technical responses while receiving real-time evaluation of **English pronunciation clarity, grammar precision, speaking velocity (WPM), and filler word frequency**.
+          <p className="text-xs text-brand-textMuted max-w-xl leading-relaxed">
+            Practice technical responses while receiving real-time evaluation of <strong className="font-semibold text-brand-textMain">English pronunciation clarity, grammar precision, speaking velocity (WPM), and filler word frequency</strong>.
           </p>
         </div>
 
-        {/* Mode Selector */}
-        <div className="flex flex-wrap items-center gap-1 bg-brand-elevated border border-brand-border p-1 rounded-lg text-[10px] font-mono font-semibold">
+        {/* Working AI Mode Selector Tabs */}
+        <div className="flex flex-wrap items-center gap-1.5 bg-brand-elevated border border-brand-border p-1.5 rounded-lg text-[10px] font-mono font-semibold">
           {(["English Fluency Practice", "Domain Deep Dive", "Technical Screening", "Coding", "Behavioral"] as const).map((m) => (
             <button
               key={m}
-              onClick={() => setInterviewMode(m)}
-              className={`px-2.5 py-1.5 rounded transition-all ${
+              onClick={() => handleModeChange(m)}
+              className={`px-3 py-1.5 rounded transition-all cursor-pointer ${
                 interviewMode === m
                   ? "bg-[#D99A2B] text-[#17221F] font-bold shadow-xs"
-                  : "text-brand-textDim hover:text-brand-textMain"
+                  : "text-brand-textDim hover:text-brand-textMain hover:bg-brand-surface"
               }`}
             >
               {m}
@@ -129,15 +156,15 @@ export default function InterviewPage() {
           <div className="flex-1 overflow-y-auto my-4 space-y-4 pr-2 text-xs">
             {messages.map((m, idx) => (
               <div key={idx} className={`flex ${m.role === "candidate" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[85%] rounded-xl p-4 leading-relaxed ${
+                <div className={`max-w-[88%] rounded-xl p-4 leading-relaxed ${
                   m.role === "candidate" 
-                    ? "bg-[#D99A2B]/15 border border-[#D99A2B]/30 text-brand-textMain" 
+                    ? "bg-[#D99A2B]/15 border border-[#D99A2B]/40 text-brand-textMain" 
                     : "bg-brand-surface border border-brand-border text-brand-textMain"
                 }`}>
                   <span className="font-mono text-[9px] font-bold text-amber-800 dark:text-amber-400 block mb-1 uppercase">
                     {m.role === "candidate" ? "Alex Vance (Candidate)" : "AI Technical & Speech Coach"}
                   </span>
-                  <p className="whitespace-pre-line">{m.content}</p>
+                  <p className="whitespace-pre-line text-xs">{m.content}</p>
                 </div>
               </div>
             ))}
@@ -150,7 +177,7 @@ export default function InterviewPage() {
             )}
           </div>
 
-          {/* Quick Speech Suggestions */}
+          {/* Working Quick Speech Suggestions */}
           <div className="flex items-center space-x-2 mb-3 overflow-x-auto pb-1">
             {[
               "Virtual interfaces provide a dynamic handle to static physical interface signals.",
@@ -160,7 +187,7 @@ export default function InterviewPage() {
               <button
                 key={i}
                 onClick={() => submitAnswer(sug)}
-                className="px-2.5 py-1 rounded bg-brand-elevated hover:bg-brand-surface border border-brand-border text-[10px] font-mono text-brand-textMuted truncate max-w-[220px]"
+                className="px-3 py-1.5 rounded bg-brand-elevated hover:bg-brand-surface border border-brand-border text-[11px] font-mono text-brand-textMain cursor-pointer whitespace-nowrap transition-all hover:border-[#D99A2B]/50"
               >
                 {sug}
               </button>
@@ -178,7 +205,7 @@ export default function InterviewPage() {
             />
             <button
               onClick={() => submitAnswer()}
-              className="btn-primary text-xs flex items-center space-x-1.5"
+              className="btn-primary text-xs flex items-center space-x-1.5 cursor-pointer"
             >
               <span>Submit Response</span>
               <Send className="h-3.5 w-3.5" />
