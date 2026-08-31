@@ -20,7 +20,7 @@ export default function TutorPage() {
             Autonomous Socratic Tutor & Diagnostic Lab
           </h1>
           <p className="text-xs text-brand-textMuted mt-1 max-w-xl leading-relaxed">
-            Master engineering concepts through guided questioning, instant diagnostic checks, and contextual documentation for **{activeDomain.name}**.
+            Master engineering concepts through guided questioning, instant diagnostic checks, and contextual documentation for <strong className="font-semibold text-brand-textMain">{activeDomain.name}</strong>.
           </p>
         </div>
 
@@ -76,7 +76,7 @@ export default function TutorPage() {
         </div>
 
         {/* Center Column: Socratic AI Chat Workspace (6 cols) */}
-        <div className="lg:col-span-6 editorial-block h-[600px] flex flex-col p-4">
+        <div className="lg:col-span-6 editorial-block h-[620px] flex flex-col p-4">
           <SocraticTutorChat />
         </div>
 
