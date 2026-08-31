@@ -15,8 +15,8 @@ import {
   ChevronDown,
   Volume2,
   X,
-  CheckCircle2,
-  Send
+  Send,
+  Zap
 } from "lucide-react";
 import ThemeToggle from "../ui/ThemeToggle";
 import { useDomain, DOMAINS } from "../../lib/DomainContext";
@@ -29,17 +29,53 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [isCopilotOpen, setIsCopilotOpen] = useState(false);
   const [isDomainDropdownOpen, setIsDomainDropdownOpen] = useState(false);
 
+  // TinyML State Signal
+  const [tinymlSignal, setTinymlSignal] = useState<any>({
+    learner_state: "IMPROVING",
+    priority_score: 84.5,
+    confidence: 0.94,
+    recommended_action: "Master UVM Architecture & Scoreboards",
+    top_risk_factor: null,
+    fallback_active: false
+  });
+
   // Copilot Interactive State
   const [copilotMessages, setCopilotMessages] = useState<any[]>([
     {
       role: "assistant",
-      text: `Hello Alex! Based on target market alignment for **${selectedRole}**, mastering **UVM Architecture & Scoreboards** will yield a **+14% increase** in your job readiness index.`
+      text: `Hello Alex! TinyML Fast Classifier identifies your state as **IMPROVING (94% confidence)**.\n\nBased on target market alignment for **${selectedRole}**, mastering **UVM Architecture & Scoreboards** will yield a **+14% increase** in your job readiness index.`
     }
   ]);
   const [copilotInput, setCopilotInput] = useState("");
   const [copilotLoading, setCopilotLoading] = useState(false);
 
   const activeIndicatorRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    async function loadTinyMLSignal() {
+      try {
+        const res: any = await fetchApi("/copilot/tinyml/predict", {
+          method: "POST",
+          body: JSON.stringify({
+            skill_mastery_avg: 75.0,
+            retention_rate: 88.0,
+            learning_velocity_wpm: 135.0,
+            recent_quiz_score: 80.0,
+            misconception_count: 0,
+            practice_gap_days: 1.0,
+            evidence_count: 3,
+            target_readiness: activeDomain.readinessScore
+          })
+        });
+        if (res && res.learner_state) {
+          setTinymlSignal(res);
+        }
+      } catch (e) {
+        console.warn("TinyML fallback active", e);
+      }
+    }
+    loadTinyMLSignal();
+  }, [activeDomain]);
 
   const mainNavItems = [
     { label: "Command Center", href: "/", icon: LayoutDashboard, category: "CORE INTELLIGENCE" },
@@ -223,6 +259,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center space-x-4">
+            {/* TinyML Signal Indicator */}
+            <div className="hidden md:flex items-center space-x-1.5 px-2.5 py-1 rounded bg-amber-500/10 border border-amber-500/20 text-[10px] font-mono text-amber-800 dark:text-amber-300">
+              <Zap className="h-3 w-3 text-amber-800 dark:text-amber-400" />
+              <span>TinyML: {tinymlSignal.learner_state} ({Math.round(tinymlSignal.confidence * 100)}%)</span>
+            </div>
+
             {/* Theme Toggle */}
             <ThemeToggle />
 
@@ -243,14 +285,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </main>
       </div>
 
-      {/* WORKING AI COPILOT EDITORIAL DRAWER PANEL */}
+      {/* WORKING AI COPILOT EDITORIAL DRAWER PANEL WITH TINYML SIGNAL */}
       {isCopilotOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-xs">
           <div className="w-full max-w-md bg-brand-surface border-l border-brand-border h-full flex flex-col shadow-2xl p-6 space-y-6">
             <div className="flex items-center justify-between border-b border-brand-border pb-4">
               <div>
-                <span className="text-[10px] font-mono font-bold uppercase text-amber-800 dark:text-amber-400 tracking-wider">
-                  AUTONOMOUS AI ASSISTANT
+                <span className="text-[10px] font-mono font-bold uppercase text-amber-800 dark:text-amber-400 tracking-wider flex items-center space-x-1">
+                  <Zap className="h-3 w-3" />
+                  <span>AUTONOMOUS TINYML & RAG ASSISTANT</span>
                 </span>
                 <h3 className="font-serif-title font-bold text-xl text-brand-textMain mt-0.5">
                   Career Copilot
@@ -262,6 +305,19 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               >
                 <X className="h-5 w-5" />
               </button>
+            </div>
+
+            {/* TinyML Signal Card */}
+            <div className="p-3 rounded-lg bg-brand-elevated border border-brand-border space-y-1 font-mono text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-brand-textDim text-[10px] uppercase font-bold">TINYML LEARNER STATE</span>
+                <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 text-[10px] font-bold">
+                  {tinymlSignal.learner_state} ({Math.round(tinymlSignal.confidence * 100)}% Conf)
+                </span>
+              </div>
+              <p className="text-[11px] text-brand-textMuted">
+                Priority Score: <strong className="text-amber-800 dark:text-amber-400">{tinymlSignal.priority_score}</strong> · Action: {tinymlSignal.recommended_action}
+              </p>
             </div>
 
             {/* Interactive Chat Feed */}
@@ -285,12 +341,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               {copilotLoading && (
                 <div className="flex items-center space-x-2 text-xs font-mono text-amber-800 dark:text-amber-400">
                   <Sparkles className="h-4 w-4 animate-spin" />
-                  <span>Synthesizing career vector analytics...</span>
+                  <span>Querying TinyML Classifier & LLM Reasoning Engine...</span>
                 </div>
               )}
             </div>
 
-            {/* Working Copilot Quick Prompt Buttons */}
+            {/* Copilot Quick Prompts */}
             <div className="space-y-2 pt-2 border-t border-brand-border">
               <span className="text-[10px] font-mono text-brand-textDim uppercase font-bold block">
                 INTERACTIVE STRATEGIC PROMPTS

@@ -7,13 +7,13 @@ import { useDomain } from "../../lib/DomainContext";
 
 const MODE_QUESTIONS: Record<string, string> = {
   "English Fluency Practice":
-    "Welcome Alex! I am your AI Technical Interviewer & Communication Coach.\n\nLet's begin your **English Fluency Practice**: Please explain in clear professional English why SystemVerilog interfaces are used over traditional wire/reg bundles in modern verification testbenches.",
+    "Welcome Alex! I am your AI Technical Interviewer & Communication Coach.\n\nLet's begin your English Fluency Practice: Please explain in clear professional English why SystemVerilog interfaces are used over traditional wire/reg bundles in modern verification testbenches.",
   "Domain Deep Dive":
     "Domain Deep Dive Mode (RTL Verification):\n\nCan you explain the exact mechanism of how SystemVerilog clocking blocks sample signals in the preponed region to eliminate simulation race conditions?",
   "Technical Screening":
-    "Technical Screening Question:\n\nWhat is the precise difference between non-blocking (`<=`) and blocking (`=`) assignments in Verilog, and which IEEE 1800 scheduler region processes non-blocking updates?",
+    "Technical Screening Question:\n\nWhat is the precise difference between non-blocking (<=) and blocking (=) assignments in Verilog, and which IEEE 1800 scheduler region processes non-blocking updates?",
   "Coding":
-    "Coding & Logic Challenge:\n\nWrite a SystemVerilog constrained-random class definition for an Ethernet packet where `payload.size()` is constrained between 64 and 1500 bytes.",
+    "Coding & Logic Challenge:\n\nWrite a SystemVerilog constrained-random class definition for an Ethernet packet where payload.size() is constrained between 64 and 1500 bytes.",
   "Behavioral":
     "Behavioral Engineering Question:\n\nDescribe a complex technical bug you encountered during RTL simulation or STA timing closure, how you isolated the root cause, and how you communicated the fix to your team."
 };
@@ -138,10 +138,10 @@ export default function InterviewPage() {
         </div>
       </div>
 
-      {/* Main Workspace Grid */}
+      {/* Main Workspace Grid (65% Left / 35% Right Proportions) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Chat Window (7 cols) */}
-        <div className="lg:col-span-7 editorial-block flex flex-col h-[560px]">
+        {/* Left Chat Window (8 cols / ~66%) */}
+        <div className="lg:col-span-8 editorial-block flex flex-col h-[560px]">
           <div className="flex items-center justify-between pb-3 border-b border-brand-border text-xs font-mono">
             <div className="flex items-center space-x-2 text-amber-800 dark:text-amber-400 font-bold">
               <Terminal className="h-4 w-4" />
@@ -177,7 +177,7 @@ export default function InterviewPage() {
             )}
           </div>
 
-          {/* Working Quick Speech Suggestions */}
+          {/* Quick Speech Suggestions */}
           <div className="flex items-center space-x-2 mb-3 overflow-x-auto pb-1">
             {[
               "Virtual interfaces provide a dynamic handle to static physical interface signals.",
@@ -213,8 +213,8 @@ export default function InterviewPage() {
           </div>
         </div>
 
-        {/* Right English Fluency Scorecard Panel (5 cols) */}
-        <div className="lg:col-span-5 space-y-4">
+        {/* Right English Fluency Scorecard Panel (4 cols / ~33%) */}
+        <div className="lg:col-span-4 space-y-4">
           <div className="editorial-block space-y-4">
             <div className="flex items-center justify-between border-b border-brand-border pb-3">
               <h3 className="font-serif-title font-bold text-base text-brand-textMain flex items-center space-x-2">

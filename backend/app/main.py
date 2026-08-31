@@ -4,7 +4,7 @@ from app.core.config import settings
 from app.seed.runner import seed_database
 from app.api import (
     onboarding, twin, skills, career, gap,
-    simulator, tutor, assessment, memory, evidence, interview, demo, new_features_router, flagship_router
+    simulator, tutor, assessment, memory, evidence, interview, demo, new_features_router, flagship_router, tinyml_router
 )
 
 # Ensure database tables and seed data are initialized
@@ -41,6 +41,7 @@ app.include_router(interview.router, prefix=settings.API_V1_STR)
 app.include_router(demo.router, prefix=settings.API_V1_STR)
 app.include_router(new_features_router.router, prefix=settings.API_V1_STR)
 app.include_router(flagship_router.router, prefix=settings.API_V1_STR)
+app.include_router(tinyml_router.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():
