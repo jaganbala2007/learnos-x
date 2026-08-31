@@ -1,108 +1,152 @@
 "use client";
 
 import { useState } from "react";
-import { HelpCircle, AlertTriangle, ArrowRight, Sparkles, RefreshCw } from "lucide-react";
+import { HelpCircle, AlertTriangle, ArrowRight, Sparkles, RefreshCw, Clock, Target, Calendar, TrendingUp } from "lucide-react";
 import { fetchApi } from "../../lib/api";
+import { useDomain } from "../../lib/DomainContext";
 
 export default function WhatIfSimulatorCard() {
-  const [activeQuery, setActiveQuery] = useState("skip_skill");
-  const [simulation, setSimulation] = useState<any>({
-    recalculated_readiness: 43.0,
-    recalculated_weeks: 3.0,
-    risk_assessment: "HIGH RISK: Skipping SystemVerilog Interfaces blocks 3 downstream UVM modules.",
-    simulation_insight: "Skipping saves 1 week, but reduces maximum role readiness cap from 87% to 73%."
-  });
-  const [loading, setLoading] = useState(false);
+  const { activeDomain } = useDomain();
+  
+  const [dailyHours, setDailyHours] = useState<number>(3);
+  const [intensityMode, setIntensityMode] = useState<"fast" | "balanced" | "deep">("balanced");
+  const [skipSkill, setSkipSkill] = useState<boolean>(false);
 
-  const runSimulation = async (type: string) => {
-    setActiveQuery(type);
-    setLoading(true);
-    try {
-      const res: any = await fetchApi("/flagship/simulator/what-if", {
-        method: "POST",
-        body: JSON.stringify({ query_type: type })
-      });
-      setSimulation(res);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Compute dynamic trajectory metrics
+  const weeklyHours = dailyHours * 7;
+  const baseWeeks = activeDomain.readinessScore < 50 ? 10 : 6.4;
+  const intensityMultiplier = intensityMode === "fast" ? 0.8 : intensityMode === "deep" ? 1.3 : 1.0;
+  const calculatedWeeks = Math.max(2, parseFloat(((baseWeeks * 20) / (weeklyHours * (skipSkill ? 1.15 : 1.0)) * intensityMultiplier).toFixed(1)));
+  const calculatedReadiness = skipSkill ? Math.max(40, activeDomain.readinessScore - 12) : Math.min(96, activeDomain.readinessScore + 16);
 
   return (
-    <div className="glass-panel p-6 space-y-5 border-cyan-500/30">
-      <div className="flex items-center justify-between pb-3 border-b border-brand-border">
+    <div className="glass-panel p-6 space-y-6 border-cyan-500/30">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-brand-border">
         <div>
-          <span className="status-badge badge-cyan">Counterfactual Intelligence</span>
-          <h3 className="text-base font-bold text-slate-100 mt-1">"What-If" Learning Trajectory Simulator</h3>
-          <p className="text-xs text-brand-textDim">Simulate trade-offs when skipping skills, reducing hours, or changing career targets.</p>
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase tracking-wider">
+            Counterfactual Scenario Engine
+          </span>
+          <h3 className="text-lg font-bold text-slate-100 mt-1">"What-If" Learning Trajectory Simulator</h3>
+          <p className="text-xs text-brand-textDim">
+            Adjust daily time budget, learning intensity, or skip skills to simulate career readiness trajectories.
+          </p>
         </div>
       </div>
 
-      {/* Query Selector Buttons */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-semibold">
-        <button
-          onClick={() => runSimulation("skip_skill")}
-          className={`p-3 rounded-xl border text-left transition-all ${
-            activeQuery === "skip_skill"
-              ? "bg-rose-500/20 text-rose-300 border-rose-500/40 font-bold"
-              : "bg-brand-elevated/60 border-brand-border text-brand-textDim hover:text-brand-textMain"
-          }`}
-        >
-          <span className="block text-[10px] uppercase text-rose-400 font-extrabold mb-1">Scenario A</span>
-          <span>"What if I skip SystemVerilog Interfaces?"</span>
-        </button>
+      {/* Interactive Controls Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Slider 1: Daily Study Hours */}
+        <div className="bg-brand-surface/70 border border-brand-border p-4 rounded-xl space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-mono font-bold text-slate-200 uppercase">Daily Hours</span>
+            <span className="text-sm font-mono font-extrabold text-cyan-400">{dailyHours} hrs / day</span>
+          </div>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            step="0.5"
+            value={dailyHours}
+            onChange={(e) => setDailyHours(parseFloat(e.target.value))}
+            className="w-full accent-cyan-400 cursor-pointer"
+          />
+          <div className="flex justify-between text-[10px] font-mono text-brand-textDim">
+            <span>1h (Casual)</span>
+            <span>5h (Balanced)</span>
+            <span>10h (Bootcamp)</span>
+          </div>
+        </div>
 
-        <button
-          onClick={() => runSimulation("change_hours")}
-          className={`p-3 rounded-xl border text-left transition-all ${
-            activeQuery === "change_hours"
-              ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold"
-              : "bg-brand-elevated/60 border-brand-border text-brand-textDim hover:text-brand-textMain"
-          }`}
-        >
-          <span className="block text-[10px] uppercase text-cyan-400 font-extrabold mb-1">Scenario B</span>
-          <span>"What if I study 5 hrs/week?"</span>
-        </button>
+        {/* Control 2: Intensity Profile */}
+        <div className="bg-brand-surface/70 border border-brand-border p-4 rounded-xl space-y-3">
+          <span className="text-xs font-mono font-bold text-slate-200 uppercase block">Learning Intensity</span>
+          <div className="grid grid-cols-3 gap-1.5 text-[11px] font-mono font-semibold">
+            <button
+              onClick={() => setIntensityMode("fast")}
+              className={`py-2 rounded-lg transition-all ${
+                intensityMode === "fast"
+                  ? "bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold"
+                  : "bg-brand-elevated text-brand-textDim hover:text-slate-200"
+              }`}
+            >
+              Fast Track
+            </button>
+            <button
+              onClick={() => setIntensityMode("balanced")}
+              className={`py-2 rounded-lg transition-all ${
+                intensityMode === "balanced"
+                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold"
+                  : "bg-brand-elevated text-brand-textDim hover:text-slate-200"
+              }`}
+            >
+              Balanced
+            </button>
+            <button
+              onClick={() => setIntensityMode("deep")}
+              className={`py-2 rounded-lg transition-all ${
+                intensityMode === "deep"
+                  ? "bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold"
+                  : "bg-brand-elevated text-brand-textDim hover:text-slate-200"
+              }`}
+            >
+              Deep Spec
+            </button>
+          </div>
+        </div>
 
-        <button
-          onClick={() => runSimulation("role_change")}
-          className={`p-3 rounded-xl border text-left transition-all ${
-            activeQuery === "role_change"
-              ? "bg-purple-500/20 text-purple-300 border-purple-500/40 font-bold"
-              : "bg-brand-elevated/60 border-brand-border text-brand-textDim hover:text-brand-textMain"
-          }`}
-        >
-          <span className="block text-[10px] uppercase text-purple-400 font-extrabold mb-1">Scenario C</span>
-          <span>"What if I switch to FPGA Engineer?"</span>
-        </button>
+        {/* Control 3: Skill Prerequisite Compression */}
+        <div className="bg-brand-surface/70 border border-brand-border p-4 rounded-xl space-y-3 flex flex-col justify-between">
+          <span className="text-xs font-mono font-bold text-slate-200 uppercase block">Prerequisite Strategy</span>
+          <button
+            onClick={() => setSkipSkill(!skipSkill)}
+            className={`w-full py-2.5 px-3 rounded-lg text-xs font-mono font-bold transition-all border flex items-center justify-between ${
+              skipSkill
+                ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
+                : "bg-indigo-500/20 text-indigo-300 border-indigo-500/40"
+            }`}
+          >
+            <span>{skipSkill ? "Skip Non-Essential Prerequisites" : "Complete Full Topological Chain"}</span>
+            <span className="text-[10px] font-bold">{skipSkill ? "-13 hrs" : "Full Proof"}</span>
+          </button>
+        </div>
       </div>
 
-      {/* Simulation Result Output */}
-      {simulation && (
-        <div className="glass-card p-4 space-y-3 border-brand-border/80 text-xs">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <span className="text-[10px] font-bold text-brand-textDim uppercase block">Recalculated Readiness</span>
-              <span className="text-2xl font-black text-slate-100">{simulation.recalculated_readiness}%</span>
-            </div>
-            <div>
-              <span className="text-[10px] font-bold text-brand-textDim uppercase block">Completion Timeline</span>
-              <span className="text-2xl font-black text-cyan-400">{simulation.recalculated_weeks} Weeks</span>
-            </div>
+      {/* Dynamic Simulated Output Panel */}
+      <div className="glass-card p-5 border-cyan-500/30 space-y-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-brand-elevated/80 border border-brand-border p-3 rounded-xl">
+            <span className="text-[10px] font-mono text-brand-textDim block">WEEKLY BUDGET</span>
+            <span className="text-xl font-bold font-mono text-cyan-300">{weeklyHours} Hours</span>
           </div>
 
-          <div className="pt-2 border-t border-brand-border/60">
-            <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider block flex items-center space-x-1">
-              <AlertTriangle className="h-3 w-3" />
-              <span>Risk & Trade-off Assessment</span>
+          <div className="bg-brand-elevated/80 border border-brand-border p-3 rounded-xl">
+            <span className="text-[10px] font-mono text-brand-textDim block">RECALCULATED TIMELINE</span>
+            <span className="text-xl font-bold font-mono text-indigo-300">{calculatedWeeks} Weeks</span>
+          </div>
+
+          <div className="bg-brand-elevated/80 border border-brand-border p-3 rounded-xl">
+            <span className="text-[10px] font-mono text-brand-textDim block">PROJECTED READINESS</span>
+            <span className="text-xl font-bold font-mono text-emerald-400">{calculatedReadiness}%</span>
+          </div>
+
+          <div className="bg-brand-elevated/80 border border-brand-border p-3 rounded-xl">
+            <span className="text-[10px] font-mono text-brand-textDim block">OPPORTUNITY GAIN</span>
+            <span className="text-xl font-bold font-mono text-purple-300">
+              +{Math.round((21 / calculatedWeeks) * 10)}% Speed
             </span>
-            <p className="text-brand-textMuted mt-1 font-medium">{simulation.risk_assessment}</p>
-            <p className="text-slate-200 mt-1 font-semibold">{simulation.simulation_insight}</p>
           </div>
         </div>
-      )}
+
+        <div className="pt-2 border-t border-brand-border/60 text-xs">
+          <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider block flex items-center space-x-1">
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>AI Simulation Summary</span>
+          </span>
+          <p className="text-slate-200 mt-1 leading-relaxed">
+            Studying <strong className="text-cyan-300">{dailyHours} hours/day</strong> ({weeklyHours} hrs/week) under a <strong className="text-indigo-300">{intensityMode}</strong> profile reaches <strong className="text-emerald-400">{calculatedReadiness}% readiness</strong> for <strong className="text-slate-100">{activeDomain.defaultRole}</strong> in approximately <strong className="text-cyan-300">{calculatedWeeks} weeks</strong>.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
